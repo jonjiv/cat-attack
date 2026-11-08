@@ -1,0 +1,782 @@
+{
+  "grass0": {
+    "file": "assets/tiles/grass0.png",
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "frames": 1,
+    "anchor": [
+      8,
+      8
+    ]
+  },
+  "grass1": {
+    "file": "assets/tiles/grass1.png",
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "frames": 1,
+    "anchor": [
+      8,
+      8
+    ]
+  },
+  "grass2": {
+    "file": "assets/tiles/grass2.png",
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "frames": 1,
+    "anchor": [
+      8,
+      8
+    ]
+  },
+  "path": {
+    "file": "assets/tiles/path.png",
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "frames": 16,
+    "anchor": [
+      8,
+      8
+    ]
+  },
+  "bush": {
+    "file": "assets/props/bush.png",
+    "frameWidth": 16,
+    "frameHeight": 11,
+    "frames": 1,
+    "anchor": [
+      8,
+      9
+    ]
+  },
+  "rock": {
+    "file": "assets/props/rock.png",
+    "frameWidth": 12,
+    "frameHeight": 8,
+    "frames": 1,
+    "anchor": [
+      6,
+      6
+    ]
+  },
+  "flowersA": {
+    "file": "assets/props/flowersA.png",
+    "frameWidth": 9,
+    "frameHeight": 8,
+    "frames": 1,
+    "anchor": [
+      4,
+      6
+    ]
+  },
+  "flowersB": {
+    "file": "assets/props/flowersB.png",
+    "frameWidth": 9,
+    "frameHeight": 8,
+    "frames": 1,
+    "anchor": [
+      4,
+      6
+    ]
+  },
+  "mouseHole": {
+    "file": "assets/props/mouseHole.png",
+    "frameWidth": 24,
+    "frameHeight": 11,
+    "frames": 1,
+    "anchor": [
+      12,
+      9
+    ]
+  },
+  "tallGrass": {
+    "file": "assets/props/tallGrass.png",
+    "frameWidth": 16,
+    "frameHeight": 22,
+    "frames": 2,
+    "anchor": [
+      8,
+      14
+    ]
+  },
+  "tree": {
+    "file": "assets/props/tree.png",
+    "frameWidth": 32,
+    "frameHeight": 36,
+    "frames": 2,
+    "anchor": [
+      16,
+      30
+    ]
+  },
+  "cheese": {
+    "file": "assets/cheese/cheese.png",
+    "frameWidth": 44,
+    "frameHeight": 34,
+    "frames": 5,
+    "anchor": [
+      22,
+      26
+    ]
+  },
+  "soundIcon": {
+    "file": "assets/ui/soundIcon.png",
+    "frameWidth": 9,
+    "frameHeight": 8,
+    "frames": 2,
+    "anchor": [
+      4,
+      4
+    ]
+  },
+  "musicIcon": {
+    "file": "assets/ui/musicIcon.png",
+    "frameWidth": 9,
+    "frameHeight": 8,
+    "frames": 2,
+    "anchor": [
+      4,
+      4
+    ]
+  },
+  "cursor": {
+    "file": "assets/ui/cursor.png",
+    "frameWidth": 16,
+    "frameHeight": 16,
+    "frames": 2,
+    "anchor": [
+      8,
+      8
+    ]
+  },
+  "cheeseIcon": {
+    "file": "assets/ui/cheeseIcon.png",
+    "frameWidth": 9,
+    "frameHeight": 6,
+    "frames": 1,
+    "anchor": [
+      4,
+      3
+    ]
+  },
+  "range-pouncer-1": {
+    "file": "assets/ui/range-pouncer-1.png",
+    "frameWidth": 61,
+    "frameHeight": 61,
+    "frames": 1,
+    "anchor": [
+      30,
+      30
+    ]
+  },
+  "range-pouncer-2": {
+    "file": "assets/ui/range-pouncer-2.png",
+    "frameWidth": 61,
+    "frameHeight": 61,
+    "frames": 1,
+    "anchor": [
+      30,
+      30
+    ]
+  },
+  "range-pouncer-3": {
+    "file": "assets/ui/range-pouncer-3.png",
+    "frameWidth": 73,
+    "frameHeight": 73,
+    "frames": 1,
+    "anchor": [
+      36,
+      36
+    ]
+  },
+  "range-hairball-1": {
+    "file": "assets/ui/range-hairball-1.png",
+    "frameWidth": 113,
+    "frameHeight": 113,
+    "frames": 1,
+    "anchor": [
+      56,
+      56
+    ]
+  },
+  "range-hairball-2": {
+    "file": "assets/ui/range-hairball-2.png",
+    "frameWidth": 113,
+    "frameHeight": 113,
+    "frames": 1,
+    "anchor": [
+      56,
+      56
+    ]
+  },
+  "range-hairball-3": {
+    "file": "assets/ui/range-hairball-3.png",
+    "frameWidth": 129,
+    "frameHeight": 129,
+    "frames": 1,
+    "anchor": [
+      64,
+      64
+    ]
+  },
+  "range-yarn-1": {
+    "file": "assets/ui/range-yarn-1.png",
+    "frameWidth": 81,
+    "frameHeight": 81,
+    "frames": 1,
+    "anchor": [
+      40,
+      40
+    ]
+  },
+  "range-yarn-2": {
+    "file": "assets/ui/range-yarn-2.png",
+    "frameWidth": 81,
+    "frameHeight": 81,
+    "frames": 1,
+    "anchor": [
+      40,
+      40
+    ]
+  },
+  "range-yarn-3": {
+    "file": "assets/ui/range-yarn-3.png",
+    "frameWidth": 97,
+    "frameHeight": 97,
+    "frames": 1,
+    "anchor": [
+      48,
+      48
+    ]
+  },
+  "range-ice-1": {
+    "file": "assets/ui/range-ice-1.png",
+    "frameWidth": 73,
+    "frameHeight": 73,
+    "frames": 1,
+    "anchor": [
+      36,
+      36
+    ]
+  },
+  "range-ice-2": {
+    "file": "assets/ui/range-ice-2.png",
+    "frameWidth": 73,
+    "frameHeight": 73,
+    "frames": 1,
+    "anchor": [
+      36,
+      36
+    ]
+  },
+  "range-ice-3": {
+    "file": "assets/ui/range-ice-3.png",
+    "frameWidth": 89,
+    "frameHeight": 89,
+    "frames": 1,
+    "anchor": [
+      44,
+      44
+    ]
+  },
+  "range-speedy-1": {
+    "file": "assets/ui/range-speedy-1.png",
+    "frameWidth": 49,
+    "frameHeight": 49,
+    "frames": 1,
+    "anchor": [
+      24,
+      24
+    ]
+  },
+  "range-speedy-2": {
+    "file": "assets/ui/range-speedy-2.png",
+    "frameWidth": 49,
+    "frameHeight": 49,
+    "frames": 1,
+    "anchor": [
+      24,
+      24
+    ]
+  },
+  "range-speedy-3": {
+    "file": "assets/ui/range-speedy-3.png",
+    "frameWidth": 57,
+    "frameHeight": 57,
+    "frames": 1,
+    "anchor": [
+      28,
+      28
+    ]
+  },
+  "range-hiss-1": {
+    "file": "assets/ui/range-hiss-1.png",
+    "frameWidth": 61,
+    "frameHeight": 61,
+    "frames": 1,
+    "anchor": [
+      30,
+      30
+    ]
+  },
+  "range-hiss-2": {
+    "file": "assets/ui/range-hiss-2.png",
+    "frameWidth": 61,
+    "frameHeight": 61,
+    "frames": 1,
+    "anchor": [
+      30,
+      30
+    ]
+  },
+  "range-hiss-3": {
+    "file": "assets/ui/range-hiss-3.png",
+    "frameWidth": 73,
+    "frameHeight": 73,
+    "frames": 1,
+    "anchor": [
+      36,
+      36
+    ]
+  },
+  "range-sleepy-1": {
+    "file": "assets/ui/range-sleepy-1.png",
+    "frameWidth": 69,
+    "frameHeight": 69,
+    "frames": 1,
+    "anchor": [
+      34,
+      34
+    ]
+  },
+  "range-sleepy-2": {
+    "file": "assets/ui/range-sleepy-2.png",
+    "frameWidth": 69,
+    "frameHeight": 69,
+    "frames": 1,
+    "anchor": [
+      34,
+      34
+    ]
+  },
+  "range-sleepy-3": {
+    "file": "assets/ui/range-sleepy-3.png",
+    "frameWidth": 81,
+    "frameHeight": 81,
+    "frames": 1,
+    "anchor": [
+      40,
+      40
+    ]
+  },
+  "range-robocat-1": {
+    "file": "assets/ui/range-robocat-1.png",
+    "frameWidth": 97,
+    "frameHeight": 97,
+    "frames": 1,
+    "anchor": [
+      48,
+      48
+    ]
+  },
+  "range-robocat-2": {
+    "file": "assets/ui/range-robocat-2.png",
+    "frameWidth": 97,
+    "frameHeight": 97,
+    "frames": 1,
+    "anchor": [
+      48,
+      48
+    ]
+  },
+  "range-robocat-3": {
+    "file": "assets/ui/range-robocat-3.png",
+    "frameWidth": 113,
+    "frameHeight": 113,
+    "frames": 1,
+    "anchor": [
+      56,
+      56
+    ]
+  },
+  "mouse": {
+    "file": "assets/mice/mouse.png",
+    "frameWidth": 14,
+    "frameHeight": 12,
+    "frames": 6,
+    "anchor": [
+      7,
+      9
+    ]
+  },
+  "speedyMouse": {
+    "file": "assets/mice/speedyMouse.png",
+    "frameWidth": 14,
+    "frameHeight": 12,
+    "frames": 6,
+    "anchor": [
+      7,
+      9
+    ]
+  },
+  "armoredMouse": {
+    "file": "assets/mice/armoredMouse.png",
+    "frameWidth": 14,
+    "frameHeight": 12,
+    "frames": 6,
+    "anchor": [
+      7,
+      9
+    ]
+  },
+  "sneakyMouse": {
+    "file": "assets/mice/sneakyMouse.png",
+    "frameWidth": 14,
+    "frameHeight": 12,
+    "frames": 6,
+    "anchor": [
+      7,
+      9
+    ]
+  },
+  "bossRat": {
+    "file": "assets/mice/bossRat.png",
+    "frameWidth": 22,
+    "frameHeight": 18,
+    "frames": 6,
+    "anchor": [
+      11,
+      16
+    ]
+  },
+  "crumb": {
+    "file": "assets/fx/crumb.png",
+    "frameWidth": 2,
+    "frameHeight": 2,
+    "frames": 1,
+    "anchor": [
+      1,
+      1
+    ]
+  },
+  "sparkle": {
+    "file": "assets/fx/sparkle.png",
+    "frameWidth": 7,
+    "frameHeight": 7,
+    "frames": 4,
+    "anchor": [
+      3,
+      3
+    ]
+  },
+  "treat": {
+    "file": "assets/fx/treat.png",
+    "frameWidth": 9,
+    "frameHeight": 6,
+    "frames": 1,
+    "anchor": [
+      4,
+      3
+    ]
+  },
+  "hairballShot": {
+    "file": "assets/fx/hairballShot.png",
+    "frameWidth": 5,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      2,
+      2
+    ]
+  },
+  "yarnShot": {
+    "file": "assets/fx/yarnShot.png",
+    "frameWidth": 5,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      2,
+      2
+    ]
+  },
+  "iceShot": {
+    "file": "assets/fx/iceShot.png",
+    "frameWidth": 5,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      2,
+      2
+    ]
+  },
+  "ring": {
+    "file": "assets/fx/ring.png",
+    "frameWidth": 65,
+    "frameHeight": 65,
+    "frames": 4,
+    "anchor": [
+      32,
+      32
+    ]
+  },
+  "zee": {
+    "file": "assets/fx/zee.png",
+    "frameWidth": 3,
+    "frameHeight": 4,
+    "frames": 1,
+    "anchor": [
+      1,
+      2
+    ]
+  },
+  "scratch": {
+    "file": "assets/fx/scratch.png",
+    "frameWidth": 7,
+    "frameHeight": 3,
+    "frames": 1,
+    "anchor": [
+      3,
+      1
+    ]
+  },
+  "pouncer2": {
+    "file": "assets/cats/pouncer2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "pouncer3": {
+    "file": "assets/cats/pouncer3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "pouncer": {
+    "file": "assets/cats/pouncer.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hairball2": {
+    "file": "assets/cats/hairball2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hairball3": {
+    "file": "assets/cats/hairball3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hairball": {
+    "file": "assets/cats/hairball.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "yarn2": {
+    "file": "assets/cats/yarn2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "yarn3": {
+    "file": "assets/cats/yarn3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "yarn": {
+    "file": "assets/cats/yarn.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "ice2": {
+    "file": "assets/cats/ice2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "ice3": {
+    "file": "assets/cats/ice3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "ice": {
+    "file": "assets/cats/ice.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "speedy2": {
+    "file": "assets/cats/speedy2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "speedy3": {
+    "file": "assets/cats/speedy3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "speedy": {
+    "file": "assets/cats/speedy.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hiss2": {
+    "file": "assets/cats/hiss2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hiss3": {
+    "file": "assets/cats/hiss3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hiss": {
+    "file": "assets/cats/hiss.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "sleepy2": {
+    "file": "assets/cats/sleepy2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "sleepy3": {
+    "file": "assets/cats/sleepy3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "sleepy": {
+    "file": "assets/cats/sleepy.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "robocat2": {
+    "file": "assets/cats/robocat2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "robocat3": {
+    "file": "assets/cats/robocat3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "robocat": {
+    "file": "assets/cats/robocat.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  }
+}

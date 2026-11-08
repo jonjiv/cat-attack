@@ -1,0 +1,9 @@
+{
+  "name": "cat-attack",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sprites": "node tools/build-sprites.js",
+    "start": "node tools/serve.js"
+  }
+}
