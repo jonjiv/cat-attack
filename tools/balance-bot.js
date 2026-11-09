@@ -2,7 +2,9 @@
 //   const bot = await import('/tools/balance-bot.js'); bot.runBot(bot.MIXED)
 // then read window.botLog for how much cheese each wave cost.
 // A plan is a list of steps done in order whenever there are enough treats:
-//   ['place', catKey, col, row]  or  ['up', '', col, row] (upgrade the cat on that tile)
+//   ['place', catKey, col, row]
+//   ['up', '', col, row]      buy the next upgrade for the cat on that tile (never its weapon)
+//   ['weapon', '', col, row]  buy that cat's weapon, once it has both upgrades
 
 export async function runBot(plan, speed = 6) {
   const s = window.catAttack.scene.getScene('Game');
@@ -25,9 +27,10 @@ export async function runBot(plan, speed = 6) {
         if (!s.cats.get(`${c},${r}`)) log.push(`FAILED place ${key} ${c},${r}`);
       } else {
         const cat = s.cats.get(`${c},${r}`);
-        if (cat && cat.upgradeCost !== null) {
-          if (s.treats < cat.upgradeCost) return;
-          s.upgradeCat(cat);
+        const node = cat && cat.nextNode;
+        if (node && (op === 'weapon') === (node === 'weapon')) {
+          if (s.treats < cat.type.tree[node].cost) return;
+          s.upgradeCat(cat, node);
         }
       }
       i++;
@@ -57,6 +60,18 @@ export const MIXED = [
   ['up', '', 17, 5], ['up', '', 7, 6], ['up', '', 11, 9], ['up', '', 17, 9], ['up', '', 7, 4],
   ['up', '', 5, 6], ['up', '', 11, 7], ['up', '', 7, 6], ['up', '', 7, 11], ['up', '', 17, 5],
   ['up', '', 11, 9], ['up', '', 17, 9],
+];
+
+// MIXED, then more cats near the end of the path, then weapons last, like a real player would.
+const EARLY_TILES = [[5, 3], [7, 4], [5, 6], [8, 8], [13, 8], [11, 7], [17, 5], [7, 11], [11, 9], [17, 9], [7, 6]];
+const LATE_TILES = [[19, 5], [13, 4], [19, 7], [13, 10], [9, 9], [19, 9], [17, 11], [11, 5], [5, 9]];
+export const FULL = [
+  ...MIXED,
+  ['place', 'army', 19, 5], ['place', 'wizard', 13, 4], ['place', 'robocat', 19, 7], ['place', 'army', 13, 10],
+  ['place', 'wizard', 9, 9], ['place', 'hairball', 19, 9], ['place', 'sleepy', 17, 11], ['place', 'army', 11, 5],
+  ['place', 'wizard', 5, 9],
+  ...LATE_TILES.flatMap(([c, r]) => [['up', '', c, r], ['up', '', c, r]]),
+  ...[...EARLY_TILES, ...LATE_TILES].map(([c, r]) => ['weapon', '', c, r]),
 ];
 
 // A lazy build: only Pouncers, never upgraded. It should lose somewhere in the middle.

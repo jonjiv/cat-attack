@@ -27,12 +27,12 @@ export function floatingZ(scene, x, y) {
   scene.tweens.add({ targets: z, x: x + 5, y: y - 10, alpha: 0, duration: 1300, onComplete: () => z.destroy() });
 }
 
-// Robocat's laser: a red beam with a bright core, gone in a flash.
-export function laserBeam(scene, from, to) {
+// A beam with a bright core, gone in a flash: Robocat's red laser, Wizard Cat's purple zap.
+export function laserBeam(scene, from, to, colorName = 'laser') {
   const beam = scene.add
     .graphics()
     .setDepth(objectDepth(Math.max(from.y, to.y)) + 2)
-    .lineStyle(2, tint('laser'))
+    .lineStyle(2, tint(colorName))
     .lineBetween(from.x, from.y, to.x, to.y)
     .lineStyle(1, tint('white'))
     .lineBetween(from.x, from.y, to.x, to.y);

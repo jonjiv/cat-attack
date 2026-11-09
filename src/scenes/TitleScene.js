@@ -1,5 +1,5 @@
 import { PALETTE } from '../../art-src/palette.js';
-import { CATS } from '../data/cats.js';
+import { CATS_BY_PRICE } from '../data/cats.js';
 import { MICE } from '../data/mice.js';
 import { makeCatAnims } from '../entities/Cat.js';
 import { makeMouseAnims } from '../entities/Mouse.js';
@@ -33,16 +33,17 @@ export class TitleScene extends Phaser.Scene {
     this.add.text(W / 2, 68, 'IDEAS BY GIDEON', { ...small, color: PALETTE.cheesePale }).setOrigin(0.5);
 
     // Every cat, sitting in a row, each with a different level look.
-    Object.values(CATS).forEach((type, i) => {
+    const lineup = CATS_BY_PRICE;
+    lineup.forEach((type, i) => {
       makeCatAnims(this, type);
       const level = (i % 3) + 1;
       const sheet = level === 1 ? type.sprite : `${type.sprite}${level}`;
-      this.add.sprite(66 + i * 36, 128, sheet).setOrigin(0.5, 0.75).play(`${sheet}-idle`).setDepth(128);
+      this.add.sprite(W / 2 + (i - (lineup.length - 1) / 2) * 30, 128, sheet).setOrigin(0.5, 0.75).play(`${sheet}-idle`).setDepth(128);
     });
 
     // A parade of mice running for the cheese.
     for (const type of Object.values(MICE)) makeMouseAnims(this, type.sprite);
-    const parade = ['mouse', 'speedyMouse', 'mouse', 'armoredMouse', 'sneakyMouse', 'mouse', 'bossRat'];
+    const parade = ['mouse', 'speedyMouse', 'mouse', 'armoredMouse', 'sneakyMouse', 'rocketMouse', 'nurseMouse', 'mamaMouse', 'mouse', 'bossRat'];
     parade.forEach((key, i) => {
       const m = this.add.sprite(-30 - i * 34, PATH_Y + 4, key).setOrigin(0.5, 0.75).play(`${key}-side`).setDepth(PATH_Y + 4);
       this.tweens.add({ targets: m, x: W / 2 + 130, duration: 7000, repeat: -1, delay: 0 });

@@ -81,6 +81,22 @@ const CAP = { R: 'red', S: 'stoneHi' };
 const capFront = art(['.oooooo.', 'oRSRSRSo', 'oRRRRRRo'], CAP);
 const capSide = art(['.oooooo', 'oSRSRSo', 'oRRRRRo'], CAP);
 
+// Rocket Mouse: goggles and a jetpack (red with a yellow flame).
+const ROCKET_FUR = { M: 'stoneLight', L: 'white', D: 'stoneMid', P: 'pink', I: 'iceDark' };
+const JET = { R: 'red', Y: 'cheeseLight' };
+const jetFins = art(['o..........o', 'R..........R'], JET);
+const jetBack = art(['.oo.', 'oRRo', 'oRRo', 'oRRo', '.YY.'], JET);
+
+// Nurse Mouse: pale fur and a white cap with a red cross.
+const NURSE_FUR = { M: 'furLight', L: 'white', D: 'furMid', P: 'pink' };
+const NURSE_CAP = { W: 'white', R: 'red' };
+const nurseFront = art(['.oooooo.', 'oWWRRWWo', 'oWRRRRWo'], NURSE_CAP);
+const nurseSide = art(['.oooooo', 'oWWRWWo', 'oWRRRWo'], NURSE_CAP);
+
+// Mama Mouse: a pink apron (her belly color) and a red bow.
+const MAMA_FUR = { M: 'furMid', L: 'petalPink', D: 'furDark', P: 'pink' };
+const bow = art(['oo.oo', 'oRoRo', 'oo.oo'], { R: 'petalRed' });
+
 // ---- Big Boss Rat: 22x18 frames, darker and bigger, red eyes, buck teeth, and a crown ----
 
 const RW = 22;
@@ -177,6 +193,22 @@ export const sprites = {
   },
   sneakyMouse: {
     frames: mouseSheet(SNEAKY_FUR, mouseRows({ frontFace: '..oKoKKoKo..', sideFace: '...oMMMMMKoKKo' })),
+    anchor: [7, 9],
+  },
+  rocketMouse: {
+    frames: mouseSheet(ROCKET_FUR, mouseRows({ frontFace: '..oIoIIoIo..', sideFace: '...oMMMMMIoIIo' }), {
+      front: [jetFins, 1, 7],
+      back: [jetBack, 5, 5],
+      side: [jetBack, 1, 3],
+    }),
+    anchor: [7, 9],
+  },
+  nurseMouse: {
+    frames: mouseSheet(NURSE_FUR, mouseRows(), { front: [nurseFront, 3, 0], back: [nurseFront, 3, 0], side: [nurseSide, 5, 0] }),
+    anchor: [7, 9],
+  },
+  mamaMouse: {
+    frames: mouseSheet(MAMA_FUR, mouseRows(), { front: [bow, 8, 0], back: [bow, 8, 0], side: [bow, 7, 0] }),
     anchor: [7, 9],
   },
   bossRat: { frames: bossRat, anchor: [11, 16] },

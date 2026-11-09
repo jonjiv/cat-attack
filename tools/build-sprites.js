@@ -12,9 +12,11 @@ import * as ui from '../art-src/ui.js';
 import * as mice from '../art-src/mice.js';
 import * as fx from '../art-src/fx.js';
 import * as cats from '../art-src/cats.js';
+import * as weapons from '../art-src/weapons.js';
+import { Grid } from '../art-src/lib.js';
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..');
-const GROUPS = { tiles, props, cheese, ui, mice, fx, cats };
+const GROUPS = { tiles, props, cheese, ui, mice, fx, cats, weapons };
 
 // Frames are laid out left to right in one strip.
 function sheetPixels(frames) {
@@ -47,4 +49,24 @@ for (const [folder, mod] of Object.entries(GROUPS)) {
   }
 }
 writeFileSync(join(ROOT, 'assets', 'manifest.json'), JSON.stringify(manifest, null, 2));
+
+// The app icon for phones: a Pouncer on grass, enlarged by a whole number so pixels stay square.
+function writeIcon(size) {
+  const g = new Grid(32, 32);
+  for (let y = 0; y < 32; y++) for (let x = 0; x < 32; x++) g.set(x, y, 'grassMid');
+  g.stamp(cats.sprites.pouncer.frames[0], 6, 7);
+  const { rgba } = sheetPixels([g]);
+  const zoom = size / 32;
+  const big = new Uint8Array(size * size * 4);
+  for (let y = 0; y < size; y++) {
+    for (let x = 0; x < size; x++) {
+      const from = (Math.floor(y / zoom) * 32 + Math.floor(x / zoom)) * 4;
+      big.set(rgba.subarray(from, from + 4), (y * size + x) * 4);
+    }
+  }
+  writeFileSync(join(ROOT, 'assets', `icon-${size}.png`), encodePNG(size, size, big));
+}
+writeIcon(192);
+writeIcon(512);
+
 console.log(`Built ${Object.keys(manifest).length} sprites.`);

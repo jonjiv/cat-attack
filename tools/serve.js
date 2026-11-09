@@ -10,6 +10,7 @@ const TYPES = {
   '.html': 'text/html',
   '.js': 'text/javascript',
   '.json': 'application/json',
+  '.webmanifest': 'application/manifest+json',
   '.png': 'image/png',
   '.css': 'text/css',
   '.wav': 'audio/wav',

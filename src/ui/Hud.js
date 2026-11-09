@@ -1,6 +1,7 @@
 // Everything drawn on top of the field: counters, the wave button, the cat shop, messages.
 // It lives in world space (same zoom as the field) so its pixels match the game's pixels.
 import { PALETTE } from '../../art-src/palette.js';
+import { canGoFullscreen, isFullscreen, toggleFullscreen } from '../fullscreen.js';
 
 const HUD_DEPTH = 40000;
 const BANNER_DEPTH = 50000;
@@ -29,7 +30,7 @@ function hitZone(scene, w, h) {
 }
 
 const WAVE_W = 84;
-const CARD_W = 30;
+const CARD_W = 24;
 const CARD_H = 34;
 const CARD_GAP = 2;
 
@@ -63,6 +64,7 @@ export class Hud {
       .container(0, 0, [
         ...toggle(0, 'soundIcon', audio.sfx, onToggleSfx),
         ...toggle(16, 'musicIcon', audio.music, onToggleMusic),
+        ...(canGoFullscreen ? this.fullscreenButton(32) : []),
       ])
       .setDepth(HUD_DEPTH);
 
@@ -97,6 +99,19 @@ export class Hud {
     this.messages = [];
   }
 
+  // Full screen on/off. It's on pointerup because browsers only allow it when a finger lifts.
+  fullscreenButton(x) {
+    const s = this.scene;
+    const icon = s.add.image(x + 7, 7, 'fullIcon', isFullscreen() ? 1 : 0);
+    const zone = hitZone(s, 14, 14).setX(x);
+    zone.on('pointerup', toggleFullscreen);
+    const update = () => icon.setFrame(isFullscreen() ? 1 : 0);
+    const events = ['fullscreenchange', 'webkitfullscreenchange'];
+    for (const e of events) document.addEventListener(e, update);
+    s.events.once('shutdown', () => events.forEach((e) => document.removeEventListener(e, update)));
+    return [s.add.graphics().fillStyle(color('outline')).fillRect(x, 0, 14, 14), icon, zone];
+  }
+
   // Only while pointing at a card, so the label doesn't sit over the path the rest of the time.
   refreshInfo() {
     const type = this.hovered;
@@ -111,7 +126,7 @@ export class Hud {
 
   placeInfo() {
     if (!this.infoW) return;
-    this.info.setPosition(Math.round(this.shop.x + this.shopSize.w / 2 - this.infoW / 2), this.shop.y - 16);
+    this.info.setPosition(Math.max(this.shop.x, Math.round(this.shop.x + this.shopSize.w / 2 - this.infoW / 2)), this.shop.y - 16);
   }
 
   makeCard(type, i, onSelectCat) {
@@ -119,9 +134,7 @@ export class Hud {
     const border = s.add.graphics();
     const cat = s.add.image(CARD_W / 2, 13, type.sprite, 0);
     const cost = String(type.cost);
-    const costW = 9 + 1 + cost.length * CHAR_W;
-    const fish = s.add.image((CARD_W - costW) / 2 + 4, 28, 'treat');
-    const costText = text(s, (CARD_W - costW) / 2 + 10, 24, cost, 'white');
+    const costText = text(s, (CARD_W - cost.length * CHAR_W) / 2, 24, cost, 'white');
     const zone = hitZone(s, CARD_W, CARD_H);
     zone.on('pointerdown', () => onSelectCat(type));
     zone.on('pointerover', () => {
@@ -132,7 +145,7 @@ export class Hud {
       this.hovered = null;
       this.refreshInfo();
     });
-    const box = s.add.container(CARD_GAP + i * (CARD_W + CARD_GAP), 2, [border, cat, fish, costText, zone]);
+    const box = s.add.container(CARD_GAP + i * (CARD_W + CARD_GAP), 2, [border, cat, costText, zone]);
     return { type, box, border, cat, costText };
   }
 
@@ -190,7 +203,8 @@ export class Hud {
     // Right of the counters, so they stay clear of the mouse hole on wide screens.
     this.audioButtons.setPosition(left + 74, top);
     this.waveBox.setPosition(right - WAVE_W, top);
-    this.shop.setPosition(Math.round(view.x + view.width / 2 - this.shopSize.w / 2), bottom - this.shopSize.h);
+    // Bottom-left, so the bar stays clear of the last stretch of path and the cheese.
+    this.shop.setPosition(left, bottom - this.shopSize.h);
     this.placeInfo();
     this.placeMessages();
   }
@@ -234,44 +248,95 @@ export class Hud {
     this.hint = null;
   }
 
-  // Panel over a placed cat: its name and level, an UPGRADE button, and a SELL button.
-  // info: { name, level, maxLevel, upgradeCost (null at max), sellValue, treats, x, y }
-  showCatPanel(info, { onUpgrade, onSell }) {
+  // Tech tree over a placed cat: the cat, its two upgrades, and the weapon they lead to.
+  // info: { name, sheet, nodes: [{ key, name, blurb, cost, state, icon }], nextNode, sellValue, treats, x, y }
+  showCatPanel(info, { onBuy, onSell }) {
     this.hideCatPanel();
     const s = this.scene;
-    const w = 112;
-    const h = 60;
-    const button = (y, label, cost, enabled, onClick) => {
-      const bg = s.add
-        .graphics()
-        .fillStyle(color('outline'))
-        .fillRect(4, y, w - 8, 14)
-        .fillStyle(color(enabled ? 'cheeseMid' : 'stoneMid'))
-        .fillRect(5, y + 1, w - 10, 12);
-      const parts = [bg, text(s, 8, y + 3, label, 'outline')];
-      if (cost !== null) {
-        const costStr = String(cost);
-        const costX = w - 8 - costStr.length * CHAR_W;
-        parts.push(s.add.image(costX - 7, y + 7, 'treat'), text(s, costX - 1, y + 3, costStr, 'outline'));
-      }
-      if (enabled) {
-        const zone = hitZone(s, w - 8, 14).setPosition(4, y);
-        zone.on('pointerdown', onClick);
-        parts.push(zone);
-      }
-      return parts;
-    };
-    const atMax = info.upgradeCost === null;
-    const canUpgrade = !atMax && info.treats >= info.upgradeCost;
+    const w = 184;
+    const h = 92;
+    const nodeW = 30;
+    const nodeH = 24;
+    const spots = { power: { x: 72, y: 18 }, skill: { x: 72, y: 44 }, weapon: { x: 138, y: 31 } };
+    const root = { x: 14, y: 31 };
+    const byKey = Object.fromEntries(info.nodes.map((n) => [n.key, n]));
+
     const parts = [
       panel(s, w, h, 'cheeseMid'),
       // Catches clicks on the panel's background so they don't reach the field.
       s.add.zone(0, 0, w, h).setOrigin(0).setInteractive(),
       text(s, 4, 4, info.name.toUpperCase(), 'cheeseLight'),
-      text(s, 4, 14, `LEVEL ${info.level}/${info.maxLevel}`, 'white'),
-      ...button(26, atMax ? 'MAX LEVEL' : 'UPGRADE', atMax ? null : info.upgradeCost, canUpgrade, onUpgrade),
-      ...button(42, 'SELL +', info.sellValue, true, onSell),
     ];
+
+    // Sell button, top right.
+    const sellStr = `SELL ${info.sellValue}`;
+    const sellW = sellStr.length * CHAR_W + 6;
+    const sellX = w - sellW - 3;
+    parts.push(s.add.graphics().fillStyle(color('cheeseMid')).fillRect(sellX, 2, sellW, 12), text(s, sellX + 3, 4, sellStr, 'outline'));
+    const sellZone = hitZone(s, sellW, 12).setPosition(sellX, 2);
+    sellZone.on('pointerdown', onSell);
+    parts.push(sellZone);
+
+    // Lines joining the tree: bright once the node they lead from is owned.
+    const lines = s.add.graphics();
+    const link = (x1, y1, x2, y2, lit) => {
+      const mid = Math.round((x1 + x2) / 2);
+      lines
+        .lineStyle(1, color(lit ? 'cheeseLight' : 'stoneDark'))
+        .lineBetween(x1, y1, mid, y1)
+        .lineBetween(mid, y1, mid, y2)
+        .lineBetween(mid, y2, x2, y2);
+    };
+    const rootY = root.y + nodeH / 2;
+    for (const key of ['power', 'skill']) {
+      const y = spots[key].y + nodeH / 2;
+      link(root.x + nodeW, rootY, spots[key].x, y, true);
+      link(spots[key].x + nodeW, y, spots.weapon.x, spots.weapon.y + nodeH / 2, byKey[key].state === 'owned');
+    }
+    parts.push(lines);
+
+    // The cat itself, at the root of the tree.
+    parts.push(
+      s.add.graphics().fillStyle(color('cheeseLight')).fillRect(root.x, root.y, nodeW, nodeH).fillStyle(color('dirtMid')).fillRect(root.x + 1, root.y + 1, nodeW - 2, nodeH - 2),
+      s.add.image(root.x + nodeW / 2, root.y + nodeH / 2, info.sheet, 0),
+    );
+
+    // The two lines of text about whichever node you're pointing at (or the next one to buy).
+    const titleLine = text(s, 4, 71, '', 'cheeseLight');
+    const blurbLine = text(s, 4, 81, '', 'white');
+    const describe = () => {
+      const node = byKey[this.treeHover] || byKey[info.nextNode];
+      titleLine.setText(node ? node.name : 'TREE COMPLETE!');
+      blurbLine.setText(node ? node.blurb : '');
+    };
+
+    for (const node of info.nodes) {
+      const { x, y } = spots[node.key];
+      const owned = node.state === 'owned';
+      const canBuy = node.state === 'ready' && info.treats >= node.cost;
+      const border = owned ? 'cheeseLight' : canBuy ? 'white' : 'stoneDark';
+      const fill = owned ? 'dirtMid' : 'outline';
+      const dim = node.state === 'locked' ? 0.45 : 1;
+      parts.push(s.add.graphics().fillStyle(color(border)).fillRect(x, y, nodeW, nodeH).fillStyle(color(fill)).fillRect(x + 1, y + 1, nodeW - 2, nodeH - 2).setAlpha(dim));
+      parts.push(s.add.image(x + nodeW / 2, y + 8, node.icon).setAlpha(dim));
+      const price = owned ? 'OK' : String(node.cost);
+      const priceColor = owned ? 'cheeseLight' : canBuy ? 'white' : node.state === 'ready' ? 'red' : 'stoneMid';
+      parts.push(text(s, x + (nodeW - price.length * CHAR_W) / 2, y + 15, price, priceColor).setAlpha(dim));
+      const zone = hitZone(s, nodeW, nodeH).setPosition(x, y);
+      zone.on('pointerover', () => {
+        this.treeHover = node.key;
+        describe();
+      });
+      zone.on('pointerout', () => {
+        this.treeHover = null;
+        describe();
+      });
+      zone.on('pointerdown', () => canBuy && onBuy(node.key));
+      parts.push(zone);
+    }
+    parts.push(titleLine, blurbLine);
+    describe();
+
     // Above the cat, or below it if there's no room; kept inside the screen.
     const v = this.view;
     let x = Math.round(info.x - w / 2);
@@ -279,6 +344,7 @@ export class Hud {
     if (v) {
       x = Phaser.Math.Clamp(x, Math.round(v.x) + 2, Math.round(v.x + v.width) - w - 2);
       if (y < v.y + 2) y = Math.round(info.y + 6);
+      y = Math.min(y, Math.round(v.y + v.height) - h - 2);
     }
     this.catPanel = s.add.container(x, y, parts).setDepth(HUD_DEPTH + 10);
   }

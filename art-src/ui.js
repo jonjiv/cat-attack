@@ -2,6 +2,14 @@
 import { Grid, art, TILE } from './lib.js';
 import { CATS, catStats } from '../src/data/cats.js';
 
+// Tech tree buttons for the two upgrade branches.
+const iconPower = art(['....W', '...W.', 'W.W..', '.W...', 'W.W..'], { W: 'white' });
+const iconSkill = art(['..YY.', '.YY..', 'YYYY.', '..YY.', '.YY..'], { Y: 'cheeseLight' });
+
+// Every reach a cat can have, whichever upgrades it owns.
+const OWNED_SETS = [[], ['power'], ['skill'], ['power', 'skill'], ['power', 'skill', 'weapon']];
+const RADII = [...new Set(Object.values(CATS).flatMap((type) => OWNED_SETS.map((o) => catStats(type, new Set(o)).range)))];
+
 // Small cheese wedge for the cheese counter.
 const cheeseIcon = art(
   ['oo.......', 'oLoo.....', 'oYLLoo...', 'oYhYLLoo.', 'oYYYYhYdo', 'ooooooooo'],
@@ -53,18 +61,18 @@ const redX = art(['R...R', '.R.R.', '..R..', '.R.R.', 'R...R'], ICON);
 const noteOn = art(noteRows, ICON);
 const noteOff = art(noteRows, ICON).stamp(redX, 4, 2);
 
+// Full screen button: frame 0 go full screen, frame 1 leave it.
+const fullEnter = art(['WWW...WWW', 'W.......W', 'W.......W', '.........', '.........', 'W.......W', 'W.......W', 'WWW...WWW'], ICON);
+const fullExit = art(['..W...W..', '..W...W..', 'WWW...WWW', '.........', '.........', 'WWW...WWW', '..W...W..', '..W...W..'], ICON);
+
 export const sprites = {
+  fullIcon: { frames: [fullEnter, fullExit], anchor: [4, 4] },
   soundIcon: { frames: [speakerOn, speakerOff], anchor: [4, 4] },
   musicIcon: { frames: [noteOn, noteOff], anchor: [4, 4] },
   cursor: { frames: [cursor('white'), cursor('red')], anchor: [TILE / 2, TILE / 2] },
   cheeseIcon: { frames: [cheeseIcon], anchor: [4, 3] },
-  // One reach circle per cat and level ("range-pouncer-2"), sized from the cat's range.
-  ...Object.fromEntries(
-    Object.values(CATS).flatMap((type) =>
-      [1, 2, 3].map((level) => {
-        const r = catStats(type, level).range;
-        return [`range-${type.sprite}-${level}`, { frames: [rangeRing(r)], anchor: [r, r] }];
-      }),
-    ),
-  ),
+  iconPower: { frames: [iconPower], anchor: [2, 2] },
+  iconSkill: { frames: [iconSkill], anchor: [2, 2] },
+  // One reach circle per distance ("range-36"), shared by any cats with that reach.
+  ...Object.fromEntries(RADII.map((r) => [`range-${r}`, { frames: [rangeRing(r)], anchor: [r, r] }])),
 };

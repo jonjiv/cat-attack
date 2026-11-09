@@ -2,12 +2,13 @@ import { TILE, toWorld, toTile, objectDepth } from '../grid.js';
 import { buildMap } from '../map.js';
 import { FIELD } from '../data/maps/field.js';
 import { MICE } from '../data/mice.js';
-import { CATS, MAX_LEVEL, SELL_BACK } from '../data/cats.js';
+import { CATS_BY_PRICE, NODES, nodeState, SELL_BACK } from '../data/cats.js';
 import { WAVES, scaleForWave, waveBonus } from '../data/waves.js';
 import { Mouse, makeMouseAnims } from '../entities/Mouse.js';
 import { Cat, makeCatAnims } from '../entities/Cat.js';
 import { crumbBurst } from '../fx/crumbs.js';
 import { sparkleBurst, makeSparkleAnim } from '../fx/sparkle.js';
+import { ringBurst } from '../fx/effects.js';
 import { Hud } from '../ui/Hud.js';
 import { sound } from '../audio/sound.js';
 
@@ -19,7 +20,7 @@ const FLYING_DEPTH = 39000;
 // How many bites the whole cheese pile holds.
 const CHEESE_BITES = 20;
 const START_TREATS = 40;
-const SHOP = Object.values(CATS);
+const SHOP = CATS_BY_PRICE;
 
 // Pile picture for how much cheese is left: full, 3/4, 1/2, 1/4, crumbs.
 function cheeseFrame(left) {
@@ -85,9 +86,9 @@ export class GameScene extends Phaser.Scene {
     // Hovering a tile shows the cursor; on an open tile, a see-through cat and its reach.
     this.cursor = this.placeOnTile('cursor', 0, 0).setDepth(CURSOR_DEPTH).setVisible(false);
     this.ghost = this.add.image(0, 0, SHOP[0].sprite).setAlpha(0.55).setVisible(false);
-    this.ring = this.add.image(0, 0, `range-${SHOP[0].sprite}-1`).setDepth(RING_DEPTH).setVisible(false);
+    this.ring = this.add.image(0, 0, `range-${SHOP[0].range}`).setDepth(RING_DEPTH).setVisible(false);
     // Reach of the cat whose upgrade panel is open.
-    this.panelRing = this.add.image(0, 0, `range-${SHOP[0].sprite}-1`).setDepth(RING_DEPTH).setVisible(false);
+    this.panelRing = this.add.image(0, 0, `range-${SHOP[0].range}`).setDepth(RING_DEPTH).setVisible(false);
     this.panelCat = null;
     this.selectCat(SHOP[0]);
 
@@ -96,10 +97,11 @@ export class GameScene extends Phaser.Scene {
     this.input.on('pointerdown', (p, over) => !over.length && this.onFieldClick(p));
     this.input.keyboard.on('keydown-SPACE', () => this.startWave());
     this.input.keyboard.on('keydown-ESC', () => (this.panelCat ? this.closeCatPanel() : this.selectCat(null)));
-    this.input.keyboard.on('keydown-U', () => this.panelCat && this.upgradeCat(this.panelCat));
+    this.input.keyboard.on('keydown-U', () => this.panelCat && this.upgradeCat(this.panelCat, this.panelCat.nextNode));
     this.input.keyboard.on('keydown-S', () => this.panelCat && this.sellCat(this.panelCat));
     this.input.keyboard.on('keydown', (e) => {
-      const type = SHOP[Number(e.key) - 1];
+      if (!/^[0-9]$/.test(e.key)) return;
+      const type = SHOP[e.key === '0' ? 9 : Number(e.key) - 1];
       if (type) this.selectCat(type);
     });
 
@@ -132,6 +134,7 @@ export class GameScene extends Phaser.Scene {
     for (const m of this.mice) m.update(dt);
     this.mice = this.mice.filter((m) => m.alive);
     this.updateHiding();
+    this.updateHealing(dt);
     for (const c of this.cats.values()) c.update(dt, this.mice);
 
     if (this.waveRunning && !this.gameOver && !this.schedule.length && !this.mice.length) this.waveCleared();
@@ -175,10 +178,29 @@ export class GameScene extends Phaser.Scene {
 
   spawnMouse(type) {
     const events = { arrive: (m) => this.mouseReachedCheese(m), defeat: (m) => this.mouseDefeated(m) };
-    this.mice.push(new Mouse(this, type, this.route, events));
+    const mouse = new Mouse(this, type, this.route, events);
+    this.mice.push(mouse);
     if (type.boss) {
       this.hud.message('THE BIG BOSS RAT IS COMING!', 2200, 'red');
       sound.play('boss');
+    }
+    return mouse;
+  }
+
+  // Nurse Mice give health back to the mice around them every so often. Frozen nurses can't.
+  updateHealing(dt) {
+    for (const nurse of this.mice) {
+      if (!nurse.type.heals || nurse.frozen > 0) continue;
+      nurse.healIn -= dt;
+      if (nurse.healIn > 0) continue;
+      nurse.healIn = nurse.type.healEvery;
+      const patients = this.mice.filter(
+        (m) => m.alive && m.health < m.maxHealth && Phaser.Math.Distance.Between(nurse.x, nurse.y, m.x, m.y) <= nurse.type.healRange,
+      );
+      if (!patients.length) continue;
+      for (const m of patients) m.heal(nurse.type.heals);
+      ringBurst(this, nurse.x, nurse.y - 4, nurse.type.healRange, 'grassHi');
+      sound.play('heal');
     }
   }
 
@@ -197,16 +219,30 @@ export class GameScene extends Phaser.Scene {
     const { x, y } = mouse;
     sparkleBurst(this, x, y - 4);
     sound.play('squeak');
+    // Mama Mouse leaves her babies running on from where she was beaten.
+    if (mouse.type.spawns) {
+      const { mouse: kind, count } = mouse.type.spawns;
+      for (let i = 0; i < count; i++) {
+        const baby = this.spawnMouse(scaleForWave(MICE[kind], this.wave));
+        baby.travelled = Math.max(0, mouse.travelled - i * 8);
+        baby.place();
+      }
+    }
     if (mouse.type.boss) {
       // A big rat gets a big sparkle.
       sparkleBurst(this, x - 8, y - 10);
       sparkleBurst(this, x + 8, y - 8);
       this.hud.message('BOSS RAT BEATEN!', 1800, 'cheeseMid');
     }
-    const treat = this.add.image(x, y - 4, 'treat').setDepth(FLYING_DEPTH);
+    this.flyTreat(x, y - 4, mouse.type.treats);
+  }
+
+  // A fish treat hops up, flies to the counter, and adds to your treats when it lands.
+  flyTreat(x, y, amount) {
+    const treat = this.add.image(x, y, 'treat').setDepth(FLYING_DEPTH);
     this.tweens.add({
       targets: treat,
-      y: y - 14,
+      y: y - 10,
       duration: 200,
       ease: 'Quad.easeOut',
       onComplete: () =>
@@ -218,7 +254,7 @@ export class GameScene extends Phaser.Scene {
           onComplete: () => {
             treat.destroy();
             sound.play('coin');
-            this.treats += mouse.type.treats;
+            this.treats += amount;
             this.refreshHud();
           },
         }),
@@ -265,7 +301,7 @@ export class GameScene extends Phaser.Scene {
     this.selected = type;
     if (type) {
       this.setAnchored(this.ghost, type.sprite);
-      this.setAnchored(this.ring, `range-${type.sprite}-1`);
+      this.setAnchored(this.ring, `range-${type.range}`);
     }
     this.hideCursor();
     this.refreshHud();
@@ -289,20 +325,26 @@ export class GameScene extends Phaser.Scene {
 
   openCatPanel(cat) {
     this.panelCat = cat;
-    this.setAnchored(this.panelRing, `range-${cat.type.sprite}-${cat.level}`);
+    this.setAnchored(this.panelRing, `range-${cat.stats.range}`);
     this.panelRing.setPosition(cat.home.x, cat.home.y).setVisible(true);
+    const nodes = NODES.map((key) => ({
+      key,
+      ...cat.type.tree[key],
+      state: nodeState(cat.owned, key),
+      icon: key === 'power' ? 'iconPower' : key === 'skill' ? 'iconSkill' : cat.type.tree.weapon.fire.icon,
+    }));
     this.hud.showCatPanel(
       {
         name: cat.type.name,
-        level: cat.level,
-        maxLevel: MAX_LEVEL,
-        upgradeCost: cat.upgradeCost,
+        sheet: cat.sheet,
+        nodes,
+        nextNode: cat.nextNode,
         sellValue: this.sellValue(cat),
         treats: this.treats,
         x: cat.home.x,
         y: cat.home.y,
       },
-      { onUpgrade: () => this.upgradeCat(cat), onSell: () => this.sellCat(cat) },
+      { onBuy: (node) => this.upgradeCat(cat, node), onSell: () => this.sellCat(cat) },
     );
   }
 
@@ -316,12 +358,13 @@ export class GameScene extends Phaser.Scene {
     return Math.floor(cat.spent * SELL_BACK);
   }
 
-  upgradeCat(cat) {
-    const cost = cat.upgradeCost;
-    if (cost === null || this.treats < cost) return;
+  upgradeCat(cat, node) {
+    if (!node || nodeState(cat.owned, node) !== 'ready') return;
+    const { cost } = cat.type.tree[node];
+    if (this.treats < cost) return;
     this.treats -= cost;
     sound.play('upgrade');
-    cat.upgrade();
+    cat.buy(node);
     sparkleBurst(this, cat.home.x, cat.home.y - 8);
     this.refreshHud();
   }
@@ -380,13 +423,13 @@ export class GameScene extends Phaser.Scene {
 
     if (canBuy) {
       this.ghost.setPosition(x, y).setDepth(objectDepth(y) + 0.5).setVisible(true);
-      this.setAnchored(this.ring, `range-${type.sprite}-1`);
+      this.setAnchored(this.ring, `range-${type.range}`);
       this.ring.setPosition(x, y).setVisible(true);
     }
     // Hovering a cat you already placed shows how far it reaches.
     const cat = this.cats.get(`${col},${row}`);
     if (cat) {
-      this.setAnchored(this.ring, `range-${cat.type.sprite}-${cat.level}`);
+      this.setAnchored(this.ring, `range-${cat.stats.range}`);
       this.ring.setPosition(x, y).setVisible(true);
     }
   }

@@ -119,6 +119,16 @@
       26
     ]
   },
+  "fullIcon": {
+    "file": "assets/ui/fullIcon.png",
+    "frameWidth": 9,
+    "frameHeight": 8,
+    "frames": 2,
+    "anchor": [
+      4,
+      4
+    ]
+  },
   "soundIcon": {
     "file": "assets/ui/soundIcon.png",
     "frameWidth": 9,
@@ -159,8 +169,28 @@
       3
     ]
   },
-  "range-pouncer-1": {
-    "file": "assets/ui/range-pouncer-1.png",
+  "iconPower": {
+    "file": "assets/ui/iconPower.png",
+    "frameWidth": 5,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      2,
+      2
+    ]
+  },
+  "iconSkill": {
+    "file": "assets/ui/iconSkill.png",
+    "frameWidth": 5,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      2,
+      2
+    ]
+  },
+  "range-30": {
+    "file": "assets/ui/range-30.png",
     "frameWidth": 61,
     "frameHeight": 61,
     "frames": 1,
@@ -169,18 +199,8 @@
       30
     ]
   },
-  "range-pouncer-2": {
-    "file": "assets/ui/range-pouncer-2.png",
-    "frameWidth": 61,
-    "frameHeight": 61,
-    "frames": 1,
-    "anchor": [
-      30,
-      30
-    ]
-  },
-  "range-pouncer-3": {
-    "file": "assets/ui/range-pouncer-3.png",
+  "range-36": {
+    "file": "assets/ui/range-36.png",
     "frameWidth": 73,
     "frameHeight": 73,
     "frames": 1,
@@ -189,8 +209,8 @@
       36
     ]
   },
-  "range-hairball-1": {
-    "file": "assets/ui/range-hairball-1.png",
+  "range-56": {
+    "file": "assets/ui/range-56.png",
     "frameWidth": 113,
     "frameHeight": 113,
     "frames": 1,
@@ -199,18 +219,8 @@
       56
     ]
   },
-  "range-hairball-2": {
-    "file": "assets/ui/range-hairball-2.png",
-    "frameWidth": 113,
-    "frameHeight": 113,
-    "frames": 1,
-    "anchor": [
-      56,
-      56
-    ]
-  },
-  "range-hairball-3": {
-    "file": "assets/ui/range-hairball-3.png",
+  "range-64": {
+    "file": "assets/ui/range-64.png",
     "frameWidth": 129,
     "frameHeight": 129,
     "frames": 1,
@@ -219,8 +229,8 @@
       64
     ]
   },
-  "range-yarn-1": {
-    "file": "assets/ui/range-yarn-1.png",
+  "range-40": {
+    "file": "assets/ui/range-40.png",
     "frameWidth": 81,
     "frameHeight": 81,
     "frames": 1,
@@ -229,18 +239,8 @@
       40
     ]
   },
-  "range-yarn-2": {
-    "file": "assets/ui/range-yarn-2.png",
-    "frameWidth": 81,
-    "frameHeight": 81,
-    "frames": 1,
-    "anchor": [
-      40,
-      40
-    ]
-  },
-  "range-yarn-3": {
-    "file": "assets/ui/range-yarn-3.png",
+  "range-48": {
+    "file": "assets/ui/range-48.png",
     "frameWidth": 97,
     "frameHeight": 97,
     "frames": 1,
@@ -249,28 +249,8 @@
       48
     ]
   },
-  "range-ice-1": {
-    "file": "assets/ui/range-ice-1.png",
-    "frameWidth": 73,
-    "frameHeight": 73,
-    "frames": 1,
-    "anchor": [
-      36,
-      36
-    ]
-  },
-  "range-ice-2": {
-    "file": "assets/ui/range-ice-2.png",
-    "frameWidth": 73,
-    "frameHeight": 73,
-    "frames": 1,
-    "anchor": [
-      36,
-      36
-    ]
-  },
-  "range-ice-3": {
-    "file": "assets/ui/range-ice-3.png",
+  "range-44": {
+    "file": "assets/ui/range-44.png",
     "frameWidth": 89,
     "frameHeight": 89,
     "frames": 1,
@@ -279,8 +259,8 @@
       44
     ]
   },
-  "range-speedy-1": {
-    "file": "assets/ui/range-speedy-1.png",
+  "range-24": {
+    "file": "assets/ui/range-24.png",
     "frameWidth": 49,
     "frameHeight": 49,
     "frames": 1,
@@ -289,18 +269,8 @@
       24
     ]
   },
-  "range-speedy-2": {
-    "file": "assets/ui/range-speedy-2.png",
-    "frameWidth": 49,
-    "frameHeight": 49,
-    "frames": 1,
-    "anchor": [
-      24,
-      24
-    ]
-  },
-  "range-speedy-3": {
-    "file": "assets/ui/range-speedy-3.png",
+  "range-28": {
+    "file": "assets/ui/range-28.png",
     "frameWidth": 57,
     "frameHeight": 57,
     "frames": 1,
@@ -309,38 +279,8 @@
       28
     ]
   },
-  "range-hiss-1": {
-    "file": "assets/ui/range-hiss-1.png",
-    "frameWidth": 61,
-    "frameHeight": 61,
-    "frames": 1,
-    "anchor": [
-      30,
-      30
-    ]
-  },
-  "range-hiss-2": {
-    "file": "assets/ui/range-hiss-2.png",
-    "frameWidth": 61,
-    "frameHeight": 61,
-    "frames": 1,
-    "anchor": [
-      30,
-      30
-    ]
-  },
-  "range-hiss-3": {
-    "file": "assets/ui/range-hiss-3.png",
-    "frameWidth": 73,
-    "frameHeight": 73,
-    "frames": 1,
-    "anchor": [
-      36,
-      36
-    ]
-  },
-  "range-sleepy-1": {
-    "file": "assets/ui/range-sleepy-1.png",
+  "range-34": {
+    "file": "assets/ui/range-34.png",
     "frameWidth": 69,
     "frameHeight": 69,
     "frames": 1,
@@ -349,54 +289,34 @@
       34
     ]
   },
-  "range-sleepy-2": {
-    "file": "assets/ui/range-sleepy-2.png",
-    "frameWidth": 69,
-    "frameHeight": 69,
+  "range-42": {
+    "file": "assets/ui/range-42.png",
+    "frameWidth": 85,
+    "frameHeight": 85,
     "frames": 1,
     "anchor": [
-      34,
-      34
+      42,
+      42
     ]
   },
-  "range-sleepy-3": {
-    "file": "assets/ui/range-sleepy-3.png",
-    "frameWidth": 81,
-    "frameHeight": 81,
+  "range-16": {
+    "file": "assets/ui/range-16.png",
+    "frameWidth": 33,
+    "frameHeight": 33,
     "frames": 1,
     "anchor": [
-      40,
-      40
+      16,
+      16
     ]
   },
-  "range-robocat-1": {
-    "file": "assets/ui/range-robocat-1.png",
-    "frameWidth": 97,
-    "frameHeight": 97,
+  "range-52": {
+    "file": "assets/ui/range-52.png",
+    "frameWidth": 105,
+    "frameHeight": 105,
     "frames": 1,
     "anchor": [
-      48,
-      48
-    ]
-  },
-  "range-robocat-2": {
-    "file": "assets/ui/range-robocat-2.png",
-    "frameWidth": 97,
-    "frameHeight": 97,
-    "frames": 1,
-    "anchor": [
-      48,
-      48
-    ]
-  },
-  "range-robocat-3": {
-    "file": "assets/ui/range-robocat-3.png",
-    "frameWidth": 113,
-    "frameHeight": 113,
-    "frames": 1,
-    "anchor": [
-      56,
-      56
+      52,
+      52
     ]
   },
   "mouse": {
@@ -431,6 +351,36 @@
   },
   "sneakyMouse": {
     "file": "assets/mice/sneakyMouse.png",
+    "frameWidth": 14,
+    "frameHeight": 12,
+    "frames": 6,
+    "anchor": [
+      7,
+      9
+    ]
+  },
+  "rocketMouse": {
+    "file": "assets/mice/rocketMouse.png",
+    "frameWidth": 14,
+    "frameHeight": 12,
+    "frames": 6,
+    "anchor": [
+      7,
+      9
+    ]
+  },
+  "nurseMouse": {
+    "file": "assets/mice/nurseMouse.png",
+    "frameWidth": 14,
+    "frameHeight": 12,
+    "frames": 6,
+    "anchor": [
+      7,
+      9
+    ]
+  },
+  "mamaMouse": {
+    "file": "assets/mice/mamaMouse.png",
     "frameWidth": 14,
     "frameHeight": 12,
     "frames": 6,
@@ -559,6 +509,16 @@
       15
     ]
   },
+  "pouncer4": {
+    "file": "assets/cats/pouncer4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
   "pouncer": {
     "file": "assets/cats/pouncer.png",
     "frameWidth": 20,
@@ -581,6 +541,16 @@
   },
   "hairball3": {
     "file": "assets/cats/hairball3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hairball4": {
+    "file": "assets/cats/hairball4.png",
     "frameWidth": 20,
     "frameHeight": 20,
     "frames": 4,
@@ -619,6 +589,16 @@
       15
     ]
   },
+  "yarn4": {
+    "file": "assets/cats/yarn4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
   "yarn": {
     "file": "assets/cats/yarn.png",
     "frameWidth": 20,
@@ -641,6 +621,16 @@
   },
   "ice3": {
     "file": "assets/cats/ice3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "ice4": {
+    "file": "assets/cats/ice4.png",
     "frameWidth": 20,
     "frameHeight": 20,
     "frames": 4,
@@ -679,6 +669,16 @@
       15
     ]
   },
+  "speedy4": {
+    "file": "assets/cats/speedy4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
   "speedy": {
     "file": "assets/cats/speedy.png",
     "frameWidth": 20,
@@ -701,6 +701,16 @@
   },
   "hiss3": {
     "file": "assets/cats/hiss3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "hiss4": {
+    "file": "assets/cats/hiss4.png",
     "frameWidth": 20,
     "frameHeight": 20,
     "frames": 4,
@@ -739,6 +749,16 @@
       15
     ]
   },
+  "sleepy4": {
+    "file": "assets/cats/sleepy4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
   "sleepy": {
     "file": "assets/cats/sleepy.png",
     "frameWidth": 20,
@@ -769,6 +789,16 @@
       15
     ]
   },
+  "robocat4": {
+    "file": "assets/cats/robocat4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
   "robocat": {
     "file": "assets/cats/robocat.png",
     "frameWidth": 20,
@@ -777,6 +807,246 @@
     "anchor": [
       10,
       15
+    ]
+  },
+  "fisher2": {
+    "file": "assets/cats/fisher2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "fisher3": {
+    "file": "assets/cats/fisher3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "fisher4": {
+    "file": "assets/cats/fisher4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "fisher": {
+    "file": "assets/cats/fisher.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "wizard2": {
+    "file": "assets/cats/wizard2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "wizard3": {
+    "file": "assets/cats/wizard3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "wizard4": {
+    "file": "assets/cats/wizard4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "wizard": {
+    "file": "assets/cats/wizard.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "army": {
+    "file": "assets/cats/army.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "army2": {
+    "file": "assets/cats/army2.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "army3": {
+    "file": "assets/cats/army3.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "army4": {
+    "file": "assets/cats/army4.png",
+    "frameWidth": 20,
+    "frameHeight": 20,
+    "frames": 4,
+    "anchor": [
+      10,
+      15
+    ]
+  },
+  "armySoldier": {
+    "file": "assets/cats/armySoldier.png",
+    "frameWidth": 8,
+    "frameHeight": 10,
+    "frames": 1,
+    "anchor": [
+      4,
+      5
+    ]
+  },
+  "wpnFishbone": {
+    "file": "assets/weapons/wpnFishbone.png",
+    "frameWidth": 7,
+    "frameHeight": 3,
+    "frames": 1,
+    "anchor": [
+      3,
+      1
+    ]
+  },
+  "wpnGiantHairball": {
+    "file": "assets/weapons/wpnGiantHairball.png",
+    "frameWidth": 7,
+    "frameHeight": 7,
+    "frames": 1,
+    "anchor": [
+      3,
+      3
+    ]
+  },
+  "wpnNet": {
+    "file": "assets/weapons/wpnNet.png",
+    "frameWidth": 7,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      3,
+      2
+    ]
+  },
+  "wpnBlizzard": {
+    "file": "assets/weapons/wpnBlizzard.png",
+    "frameWidth": 5,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      2,
+      2
+    ]
+  },
+  "wpnStar": {
+    "file": "assets/weapons/wpnStar.png",
+    "frameWidth": 7,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      3,
+      2
+    ]
+  },
+  "wpnSonic": {
+    "file": "assets/weapons/wpnSonic.png",
+    "frameWidth": 7,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      3,
+      2
+    ]
+  },
+  "wpnPillow": {
+    "file": "assets/weapons/wpnPillow.png",
+    "frameWidth": 7,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      3,
+      2
+    ]
+  },
+  "wpnMissile": {
+    "file": "assets/weapons/wpnMissile.png",
+    "frameWidth": 5,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      2,
+      2
+    ]
+  },
+  "wpnShell": {
+    "file": "assets/weapons/wpnShell.png",
+    "frameWidth": 7,
+    "frameHeight": 3,
+    "frames": 1,
+    "anchor": [
+      3,
+      1
+    ]
+  },
+  "wpnHarpoon": {
+    "file": "assets/weapons/wpnHarpoon.png",
+    "frameWidth": 7,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      3,
+      2
+    ]
+  },
+  "wpnMeteor": {
+    "file": "assets/weapons/wpnMeteor.png",
+    "frameWidth": 7,
+    "frameHeight": 5,
+    "frames": 1,
+    "anchor": [
+      3,
+      2
     ]
   }
 }

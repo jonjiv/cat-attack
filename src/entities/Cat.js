@@ -1,5 +1,5 @@
 import { toWorld, objectDepth } from '../grid.js';
-import { catStats, upgradeCost, MAX_LEVEL } from '../data/cats.js';
+import { catStats, nodeState, NODES, MAX_LEVEL } from '../data/cats.js';
 import { throwAt } from './Projectile.js';
 import { ringBurst, scratchMark, floatingZ, laserBeam } from '../fx/effects.js';
 import { sound } from '../audio/sound.js';
@@ -13,6 +13,10 @@ const LEAP_HEIGHT = 8;
 // Where a sitting cat's mouth and eyes are, relative to the tile center.
 const MOUTH_Y = -6;
 const EYES_Y = -9;
+// Where the star on Wizard Cat's wand is, relative to the tile center.
+const WAND = { x: 7, y: -9 };
+// How far a Wizard Cat's zap can jump from one mouse to the next.
+const CHAIN_REACH = 36;
 
 // Sprite sheet for a cat at a level: "pouncer", "pouncer2", "pouncer3".
 export function catSheet(type, level) {
@@ -156,6 +160,70 @@ const POWERS = {
     });
   },
 
+  // Send the squad: each kitten charges a different mouse (doubling up if there are few), then runs back.
+  army(cat, mice) {
+    const near = cat.inRange(mice).sort((a, b) => b.travelled - a.travelled);
+    if (!near.length) return;
+    cat.pose(WINDUP, near[0].x);
+    cat.after(120, () => {
+      cat.pose(ACTION);
+      sound.play('charge');
+      const start = { x: cat.home.x, y: cat.home.y - 2 };
+      for (let i = 0; i < cat.stats.squad; i++) {
+        const target = near[i % near.length];
+        cat.after(i * 60, () => {
+          throwAt(cat.scene, 'armySoldier', start, target, { duration: 240, arc: 6 }, (spot) => {
+            target.hit(cat.stats.damage);
+            // A target that isn't alive stays put, so this is just "run back to this spot".
+            throwAt(cat.scene, 'armySoldier', spot, { alive: false, x: start.x, y: start.y + 4 }, { duration: 200, arc: 6 }, () => {});
+          });
+        });
+      }
+      cat.after(cat.stats.squad * 60 + 460, () => cat.finish());
+    });
+  },
+
+  // No fighting: during a wave, reel in a fish treat every so often.
+  fish(cat) {
+    if (!cat.scene.waveRunning) return;
+    cat.pose(ACTION);
+    sound.play('reel');
+    cat.scene.flyTreat(cat.home.x + 8, cat.home.y - 14, cat.stats.haul);
+    cat.after(450, () => cat.finish());
+  },
+
+  // A zap that jumps from the first mouse to the next nearest, and so on.
+  zap(cat, mice) {
+    const first = cat.findTarget(mice);
+    if (!first) return;
+    cat.pose(ACTION, first.x);
+    sound.play('zap');
+    const chain = [first];
+    while (chain.length < cat.stats.chains) {
+      const from = chain[chain.length - 1];
+      let next = null;
+      let best = CHAIN_REACH;
+      for (const m of mice) {
+        if (!m.alive || m.hidden || chain.includes(m)) continue;
+        const d = Phaser.Math.Distance.Between(from.x, from.y, m.x, m.y);
+        if (d < best) {
+          best = d;
+          next = m;
+        }
+      }
+      if (!next) break;
+      chain.push(next);
+    }
+    let a = { x: cat.home.x + WAND.x, y: cat.home.y + WAND.y };
+    for (const m of chain) {
+      const b = { x: m.x, y: m.y - 4 };
+      laserBeam(cat.scene, a, b, 'petalPurple');
+      a = b;
+    }
+    for (const m of chain) m.hit(cat.stats.damage);
+    cat.after(200, () => cat.finish());
+  },
+
   // Laser eyes: an instant beam at the mouse closest to the cheese.
   laser(cat, mice) {
     const target = cat.findTarget(mice);
@@ -168,14 +236,59 @@ const POWERS = {
   },
 };
 
+// What a weapon does to one mouse.
+function weaponHit(mouse, fire) {
+  if (fire.slow) mouse.slow(fire.slow, fire.slowTime);
+  if (fire.freeze) mouse.chill(fire.freeze);
+  if (fire.push) mouse.pushBack(fire.push);
+  mouse.hit(fire.damage);
+}
+
+// A shot landed: blast everything nearby, or just hit its target.
+function weaponLand(cat, fire, spot, target) {
+  if (!fire.splash) {
+    if (target.alive) weaponHit(target, fire);
+    return;
+  }
+  sound.play('boom');
+  ringBurst(cat.scene, spot.x, spot.y + 4, fire.splash, 'dirtPale', [0, 1, 2]);
+  if (fire.shake) cat.scene.cameras.main.shake(90, 0.003);
+  for (const m of [...cat.scene.mice]) {
+    if (m.alive && !m.hidden && Phaser.Math.Distance.Between(spot.x, spot.y, m.x, m.y - 4) <= fire.splash) weaponHit(m, fire);
+  }
+}
+
+// The end-of-tree weapon fires by itself, alongside the cat's normal attack.
+// Returns whether it found anything to fire at.
+function fireWeapon(cat, mice) {
+  const fire = cat.stats.weapon;
+  const near = cat.inRange(mice).sort((a, b) => b.travelled - a.travelled);
+  if (!near.length) return false;
+  if (fire.area) {
+    sound.play(fire.sound);
+    ringBurst(cat.scene, cat.home.x, cat.home.y - 4, cat.stats.range, fire.ring);
+    for (const m of near) weaponHit(m, fire);
+    return true;
+  }
+  sound.play('launch');
+  for (let i = 0; i < (fire.shots || 1); i++) {
+    const target = near[i % near.length];
+    cat.after(i * 120, () => {
+      throwAt(cat.scene, fire.icon, cat.mouth(), target, fire, (spot) => weaponLand(cat, fire, spot, target));
+    });
+  }
+  return true;
+}
+
 export class Cat {
   constructor(scene, type, col, row) {
     this.scene = scene;
     this.type = type;
     this.col = col;
     this.row = row;
-    this.level = 1;
-    this.stats = catStats(type, 1);
+    this.owned = new Set(); // tech tree nodes bought so far
+    this.stats = catStats(type, this.owned);
+    this.weaponIn = 0; // seconds until the weapon can fire again
     this.spent = type.cost;
     this.removed = false;
     this.home = toWorld(col, row);
@@ -199,15 +312,20 @@ export class Cat {
     this.sprite.setFlipX(false).play(`${this.sheet}-idle`);
   }
 
-  // Next upgrade's cost, or null at max level.
-  get upgradeCost() {
-    return upgradeCost(this.type, this.level);
+  // 1 plain, 2 and 3 with one or both upgrades, 4 with the weapon.
+  get level() {
+    return this.owned.has('weapon') ? MAX_LEVEL : 1 + this.owned.size;
   }
 
-  upgrade() {
-    this.spent += this.upgradeCost;
-    this.level++;
-    this.stats = catStats(this.type, this.level);
+  // The next tech tree node that can be bought, or null when the tree is finished.
+  get nextNode() {
+    return NODES.find((n) => nodeState(this.owned, n) === 'ready') || null;
+  }
+
+  buy(node) {
+    this.spent += this.type.tree[node].cost;
+    this.owned.add(node);
+    this.stats = catStats(this.type, this.owned);
     this.sprite.setTexture(this.sheet, this.sprite.frame.name);
     if (!this.busy) this.idle();
   }
@@ -266,6 +384,10 @@ export class Cat {
         this.zTimer = 1.4;
         floatingZ(this.scene, this.home.x + 5, this.home.y - 14);
       }
+    }
+    if (this.stats.weapon) {
+      this.weaponIn -= dt;
+      if (this.weaponIn <= 0 && fireWeapon(this, mice)) this.weaponIn = this.stats.weapon.every;
     }
     if (this.busy || this.cooldown > 0) return;
     POWERS[this.type.power](this, mice);

@@ -1,5 +1,7 @@
 import { objectDepth } from '../grid.js';
 import { PALETTE } from '../../art-src/palette.js';
+import { ringBurst } from '../fx/effects.js';
+import { sound } from '../audio/sound.js';
 
 const tint = (name) => Phaser.Display.Color.HexStringToColor(PALETTE[name]).color;
 const HIT_TINT = 0xff7a7a;
@@ -33,6 +35,9 @@ export class Mouse {
     this.frozen = 0; // seconds left frozen solid
     this.slowTime = 0; // seconds left tangled in yarn
     this.slowFactor = 1;
+    this.boostIn = type.boostEvery; // Rocket Mouse: seconds until the next burst
+    this.boostLeft = 0;
+    this.healIn = type.healEvery; // Nurse Mouse: seconds until the next heal
 
     // Each mouse walks slightly off-center so a crowd doesn't stack into one sprite.
     const ox = Phaser.Math.Between(-2, 2);
@@ -55,6 +60,7 @@ export class Mouse {
     // Pop out of the mouse hole.
     this.sprite.setAlpha(0);
     scene.tweens.add({ targets: this.sprite, alpha: 1, duration: 250 });
+    if (type.scale) this.sprite.setScale(type.scale);
     // The Big Boss Rat shows how much health it has left.
     if (type.boss) this.bar = scene.add.graphics();
     this.place();
@@ -113,6 +119,19 @@ export class Mouse {
       return;
     }
     let speed = this.speed;
+    if (this.type.boostEvery) {
+      this.boostIn -= dt;
+      if (this.boostIn <= 0) {
+        this.boostIn = this.type.boostEvery;
+        this.boostLeft = this.type.boostTime;
+        ringBurst(this.sprite.scene, this.x, this.y, 6, 'stoneLight', [0, 1]);
+        sound.play('rocket');
+      }
+      if (this.boostLeft > 0) {
+        this.boostLeft -= dt;
+        speed *= this.type.boostSpeed;
+      }
+    }
     if (this.slowTime > 0) {
       speed *= this.slowFactor;
       this.slowTime -= dt;
@@ -157,6 +176,13 @@ export class Mouse {
     this.drawBar();
     this.sprite.setTint(HIT_TINT);
     this.sprite.scene.time.delayedCall(70, () => this.sprite.active && this.showStatus());
+  }
+
+  // Nurse Mouse: get some health back.
+  heal(amount) {
+    if (!this.alive) return;
+    this.health = Math.min(this.maxHealth, this.health + amount);
+    this.drawBar();
   }
 
   // Ice Cat: frozen solid in place for a moment.

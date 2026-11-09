@@ -1,5 +1,5 @@
 // Chiptune sound effects and music, made on the fly with Web Audio (no sound files).
-// Browsers only allow sound after a click, so unlock() is called from the title screen.
+// Browsers only allow sound after a click or a finger lifting, so unlock() runs on those.
 import { SONG } from './song.js';
 
 const STORE_KEY = 'catAttack.audio';
@@ -20,13 +20,35 @@ class Sound {
     this.ctx = null;
     this.settings = loadSettings();
     this.lastPlayed = {};
+    // Phones can pause audio at any time (a call, switching apps), so every tap tries to restart it.
+    for (const event of ['touchend', 'pointerup', 'click', 'keydown']) {
+      window.addEventListener(event, () => this.unlock(), { capture: true, passive: true });
+    }
+    document.addEventListener('visibilitychange', () => {
+      if (!this.ctx) return;
+      if (document.hidden) this.ctx.suspend();
+      else this.resume();
+    });
+  }
+
+  resume() {
+    if (this.ctx.state !== 'running') this.ctx.resume().catch(() => {});
   }
 
   unlock() {
-    if (this.ctx) return;
+    if (this.ctx) {
+      this.resume();
+      return;
+    }
     const AC = window.AudioContext || window.webkitAudioContext;
     if (!AC) return;
     this.ctx = new AC();
+    this.resume();
+    // Older iPhones also need a sound to be started during the tap; this one is silent.
+    const silence = this.ctx.createBufferSource();
+    silence.buffer = this.ctx.createBuffer(1, 1, this.ctx.sampleRate);
+    silence.connect(this.ctx.destination);
+    silence.start(0);
     this.sfxGain = this.ctx.createGain();
     this.musicGain = this.ctx.createGain();
     this.sfxGain.connect(this.ctx.destination);
@@ -168,6 +190,19 @@ const SFX = {
     s.noise({ dur: 0.3, vol: 0.5, freq: 220 });
   },
   laser: (s) => s.tone({ vol: 0.1, sweep: [[0, 1600], [0.12, 280]] }),
+  launch: (s) => s.tone({ vol: 0.12, sweep: [[0, 220], [0.16, 880]] }),
+  boom: (s) => {
+    s.noise({ dur: 0.25, vol: 0.45, freq: 700 });
+    s.tone({ type: 'triangle', vol: 0.35, sweep: [[0, 160], [0.22, 50]] });
+  },
+  rocket: (s) => s.noise({ dur: 0.2, vol: 0.16, freq: 1200 }),
+  heal: (s) => s.notes([84, 88], { step: 0.07, type: 'triangle', vol: 0.1 }),
+  charge: (s) => s.notes([79, 84], { step: 0.05, vol: 0.09 }),
+  reel: (s) => {
+    s.noise({ dur: 0.12, vol: 0.2, freq: 1800 });
+    s.tone({ type: 'triangle', vol: 0.18, sweep: [[0, 500], [0.18, 900]] });
+  },
+  zap: (s) => s.tone({ vol: 0.1, sweep: [[0, 900], [0.04, 1800], [0.08, 700], [0.14, 1500]] }),
   click: (s) => s.tone({ vol: 0.08, sweep: [[0, 1200], [0.03, 1200]] }),
   upgrade: (s) => s.notes([72, 76, 79, 84], { step: 0.07, vol: 0.14 }),
   sell: (s) => s.notes([84, 79, 76], { step: 0.06, vol: 0.12 }),

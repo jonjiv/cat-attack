@@ -2,6 +2,7 @@ import { PALETTE } from '../art-src/palette.js';
 import { BootScene } from './scenes/BootScene.js';
 import { TitleScene } from './scenes/TitleScene.js';
 import { GameScene } from './scenes/GameScene.js';
+import { enterFullscreen } from './fullscreen.js';
 
 // The canvas fills the whole window. GameScene zooms the camera so the playing field
 // fits the screen's width or height, and draws meadow out to the edges.
@@ -18,3 +19,8 @@ window.catAttack = new Phaser.Game({
   },
   scene: [BootScene, TitleScene, GameScene],
 });
+
+// On phones and tablets, the first tap also goes full screen where the browser allows it.
+if (window.matchMedia('(pointer: coarse)').matches) {
+  window.addEventListener('touchend', enterFullscreen, { once: true });
+}
